@@ -1,7 +1,6 @@
 package com.alexan.findevents.event;
 
 import java.io.File;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
@@ -20,15 +19,11 @@ import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
-import android.text.format.DateFormat;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.BaseAdapter;
 import android.widget.Button;
-import android.widget.CheckBox;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.GridView;
@@ -43,19 +38,16 @@ import com.actionbarsherlock.app.SherlockActivity;
 import com.actionbarsherlock.view.MenuItem;
 import com.alexan.findevents.AppConstant;
 import com.alexan.findevents.R;
-import com.alexan.findevents.R.id;
-import com.alexan.findevents.R.layout;
-import com.alexan.findevents.util.DBHelper;
-import com.alexan.findevents.util.DensityUtil;
-import com.alexan.findevents.util.ImageUtil;
 import com.alexan.findevents.dao.DBCategory;
 import com.alexan.findevents.dao.DBCity;
 import com.alexan.findevents.dao.DBDistrict;
 import com.alexan.findevents.dao.DBEvent;
 import com.alexan.findevents.dao.DBEventCategory;
-import com.alexan.findevents.dao.DBEventImage;
 import com.alexan.findevents.dao.DBImage;
 import com.alexan.findevents.dao.DBProvince;
+import com.alexan.findevents.util.DBHelper;
+import com.alexan.findevents.util.DensityUtil;
+import com.alexan.findevents.util.ImageUtil;
 
 public class PublishEventActivity extends SherlockActivity {
 
@@ -498,11 +490,8 @@ public class PublishEventActivity extends SherlockActivity {
 		}
 		
 		for(DBImage img: bdPhotos) {
-			DBEventImage ei = new DBEventImage();
-			ei.setEventID(eventID);
-			ei.setImageID(img.getId());
-			ei.setTimestamp(System.currentTimeMillis());
-			DBHelper.getInstance(this).getEventImageDao().insert(ei);
+			img.setEventID(eventID);
+			DBHelper.getInstance(this).getImageDao().insert(img);
 		}
 		
 		Toast.makeText(this, "保存成功", Toast.LENGTH_SHORT).show();
@@ -550,8 +539,6 @@ public class PublishEventActivity extends SherlockActivity {
 			DBImage imgTemp = new DBImage();
 			imgTemp.setImageUrl(imagePath);
 			imgTemp.setTimestamp(System.currentTimeMillis());
-			long id = DBHelper.getInstance(this).getImageDao().insert(imgTemp);
-			imgTemp.setId(id);
 			bdPhotos.add(imgTemp);
 			eventPhotos.add(ImageUtil.decodeSampledBitmapFromPath(imagePath, reqWidth, reqWidth));
 			pa.notifyDataSetChanged();
@@ -593,6 +580,9 @@ public class PublishEventActivity extends SherlockActivity {
 		@Override
 		public int getCount() {
 			// TODO Auto-generated method stub
+			if(eventPhotos.size() >= 3) {
+				return eventPhotos.size();
+			}
 			return eventPhotos.size() + 1;
 		}
 
@@ -640,11 +630,8 @@ public class PublishEventActivity extends SherlockActivity {
 										picTemp = new DBImage();
 										picTemp.setImageUrl(picPathTemp);
 										picTemp.setTimestamp(System.currentTimeMillis());
-										long id = DBHelper.getInstance(PublishEventActivity.this).getImageDao().insert(picTemp);
-										picTemp.setId(id);
 										bdPhotos.add(picTemp);
 										Uri imageUri = Uri.fromFile(new File(picPathTemp));  
-										//指定照片保存路径（SD卡），workupload.jpg为一个临时文件，每次拍照后这个图片都会被替换  
 										cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri);
 										startActivityForResult(cameraIntent, 1);
 									}

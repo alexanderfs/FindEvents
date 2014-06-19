@@ -11,6 +11,8 @@ public class DBImage {
     private Integer cacheLevel;
     private Long referBigImageID;
     private Long timestamp;
+    private Long eventID;
+    private Long personID;
 
     public DBImage() {
     }
@@ -19,12 +21,14 @@ public class DBImage {
         this.id = id;
     }
 
-    public DBImage(Long id, String imageUrl, Integer cacheLevel, Long referBigImageID, Long timestamp) {
+    public DBImage(Long id, String imageUrl, Integer cacheLevel, Long referBigImageID, Long timestamp, Long eventID, Long personID) {
         this.id = id;
         this.imageUrl = imageUrl;
         this.cacheLevel = cacheLevel;
         this.referBigImageID = referBigImageID;
         this.timestamp = timestamp;
+        this.eventID = eventID;
+        this.personID = personID;
     }
 
     public Long getId() {
@@ -65,6 +69,22 @@ public class DBImage {
 
     public void setTimestamp(Long timestamp) {
         this.timestamp = timestamp;
+    }
+
+    public Long getEventID() {
+        return eventID;
+    }
+
+    public void setEventID(Long eventID) {
+        this.eventID = eventID;
+    }
+
+    public Long getPersonID() {
+        return personID;
+    }
+
+    public void setPersonID(Long personID) {
+        this.personID = personID;
     }
 
 }

@@ -10,7 +10,6 @@ import com.alexan.findevents.dao.DBCommentDao;
 import com.alexan.findevents.dao.DBDistrictDao;
 import com.alexan.findevents.dao.DBEventCategoryDao;
 import com.alexan.findevents.dao.DBEventDao;
-import com.alexan.findevents.dao.DBEventImageDao;
 import com.alexan.findevents.dao.DBEventMessageDao;
 import com.alexan.findevents.dao.DBFavCategoryDao;
 import com.alexan.findevents.dao.DBFriendDao;
@@ -40,7 +39,6 @@ public class DBHelper {
 	private   DBFriendDao friendDao;
 	private   DBEventDao eventDao;
 	private   DBEventCategoryDao eventCategoryDao;
-	private   DBEventImageDao eventImageDao;
 	private   DBLocationDao locationDao;
 	private   DBProvinceDao provinceDao;
 	private   DBCityDao cityDao;
@@ -74,7 +72,6 @@ public class DBHelper {
 			instance.districtDao = ds.getDBDistrictDao();
 			instance.eventCategoryDao = ds.getDBEventCategoryDao();
 			instance.eventDao = ds.getDBEventDao();
-			instance.eventImageDao = ds.getDBEventImageDao();
 			instance.eventMessageDao = ds.getDBEventMessageDao();
 			instance.favCategoryDao = ds.getDBFavCategoryDao();
 			instance.friendDao = ds.getDBFriendDao();
@@ -168,13 +165,6 @@ public class DBHelper {
 		this.eventCategoryDao = eventCategoryDao;
 	}
 
-	public DBEventImageDao getEventImageDao() {
-		return eventImageDao;
-	}
-
-	public void setEventImageDao(DBEventImageDao eventImageDao) {
-		this.eventImageDao = eventImageDao;
-	}
 
 	public DBProvinceDao getProvinceDao() {
 		return provinceDao;

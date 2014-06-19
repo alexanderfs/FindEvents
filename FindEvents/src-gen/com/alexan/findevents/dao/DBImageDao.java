@@ -28,6 +28,8 @@ public class DBImageDao extends AbstractDao<DBImage, Long> {
         public final static Property CacheLevel = new Property(2, Integer.class, "cacheLevel", false, "CACHE_LEVEL");
         public final static Property ReferBigImageID = new Property(3, Long.class, "referBigImageID", false, "REFER_BIG_IMAGE_ID");
         public final static Property Timestamp = new Property(4, Long.class, "timestamp", false, "TIMESTAMP");
+        public final static Property EventID = new Property(5, Long.class, "eventID", false, "EVENT_ID");
+        public final static Property PersonID = new Property(6, Long.class, "personID", false, "PERSON_ID");
     };
 
 
@@ -47,7 +49,9 @@ public class DBImageDao extends AbstractDao<DBImage, Long> {
                 "'IMAGE_URL' TEXT," + // 1: imageUrl
                 "'CACHE_LEVEL' INTEGER," + // 2: cacheLevel
                 "'REFER_BIG_IMAGE_ID' INTEGER," + // 3: referBigImageID
-                "'TIMESTAMP' INTEGER);"); // 4: timestamp
+                "'TIMESTAMP' INTEGER," + // 4: timestamp
+                "'EVENT_ID' INTEGER," + // 5: eventID
+                "'PERSON_ID' INTEGER);"); // 6: personID
     }
 
     /** Drops the underlying database table. */
@@ -85,6 +89,16 @@ public class DBImageDao extends AbstractDao<DBImage, Long> {
         if (timestamp != null) {
             stmt.bindLong(5, timestamp);
         }
+ 
+        Long eventID = entity.getEventID();
+        if (eventID != null) {
+            stmt.bindLong(6, eventID);
+        }
+ 
+        Long personID = entity.getPersonID();
+        if (personID != null) {
+            stmt.bindLong(7, personID);
+        }
     }
 
     /** @inheritdoc */
@@ -101,7 +115,9 @@ public class DBImageDao extends AbstractDao<DBImage, Long> {
             cursor.isNull(offset + 1) ? null : cursor.getString(offset + 1), // imageUrl
             cursor.isNull(offset + 2) ? null : cursor.getInt(offset + 2), // cacheLevel
             cursor.isNull(offset + 3) ? null : cursor.getLong(offset + 3), // referBigImageID
-            cursor.isNull(offset + 4) ? null : cursor.getLong(offset + 4) // timestamp
+            cursor.isNull(offset + 4) ? null : cursor.getLong(offset + 4), // timestamp
+            cursor.isNull(offset + 5) ? null : cursor.getLong(offset + 5), // eventID
+            cursor.isNull(offset + 6) ? null : cursor.getLong(offset + 6) // personID
         );
         return entity;
     }
@@ -114,6 +130,8 @@ public class DBImageDao extends AbstractDao<DBImage, Long> {
         entity.setCacheLevel(cursor.isNull(offset + 2) ? null : cursor.getInt(offset + 2));
         entity.setReferBigImageID(cursor.isNull(offset + 3) ? null : cursor.getLong(offset + 3));
         entity.setTimestamp(cursor.isNull(offset + 4) ? null : cursor.getLong(offset + 4));
+        entity.setEventID(cursor.isNull(offset + 5) ? null : cursor.getLong(offset + 5));
+        entity.setPersonID(cursor.isNull(offset + 6) ? null : cursor.getLong(offset + 6));
      }
     
     /** @inheritdoc */

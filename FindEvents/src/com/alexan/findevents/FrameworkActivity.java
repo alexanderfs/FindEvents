@@ -79,6 +79,7 @@ public class FrameworkActivity extends SlidingFragmentActivity {
 		QueryBuilder<DBHotSpot> qhs = DBHelper.getInstance(this).getHotSpotDao()
 				.queryBuilder().orderDesc(DBHotSpotDao.Properties.Timestamp).limit(7);
 		hsList = qhs.list();
+		currCity = hsList.get(0).getName();
 		DBHotSpot hs = new DBHotSpot();
 		hs.setName("更多");
 		hsList.add(hs);
@@ -171,6 +172,11 @@ public class FrameworkActivity extends SlidingFragmentActivity {
 	}
 	private List<DBHotSpot> hsList = new ArrayList<DBHotSpot>();
 	private SpotListAdapter sla;
+	private String currCity;
+	public String getCurrCity (){
+		return currCity;
+	}
+	
 	@Override
 	public boolean onPrepareOptionsMenu(Menu menu) {
 		sla = new SpotListAdapter();
@@ -180,14 +186,13 @@ public class FrameworkActivity extends SlidingFragmentActivity {
 		}
 		break;
 		case 1: {
-			final ArrayAdapter<CharSequence> aa = ArrayAdapter.createFromResource(this, 
-					R.array.hotspot, R.layout.list_simple_item_white);
 			getSupportActionBar().setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
 			getSupportActionBar().setListNavigationCallbacks(sla, new OnNavigationListener() {
 				@Override
 				public boolean onNavigationItemSelected(int itemPosition, long itemId) {
 					// TODO Auto-generated method stub
-					Toast.makeText(FrameworkActivity.this, hsList.get(itemPosition).getName(), Toast.LENGTH_SHORT).show();
+					//Toast.makeText(FrameworkActivity.this, hsList.get(itemPosition).getName(), Toast.LENGTH_SHORT).show();
+					currCity = hsList.get(itemPosition).getName();
 					updateData(hsList.get(itemPosition));
 					
 					return false;
@@ -201,7 +206,7 @@ public class FrameworkActivity extends SlidingFragmentActivity {
 				@Override
 				public boolean onNavigationItemSelected(int itemPosition, long itemId) {
 					// TODO Auto-generated method stub
-					Toast.makeText(FrameworkActivity.this, hsList.get(itemPosition).getName(), Toast.LENGTH_SHORT).show();
+					currCity = hsList.get(itemPosition).getName();
 					updateData(hsList.get(itemPosition));
 					return false;
 				}
@@ -214,7 +219,7 @@ public class FrameworkActivity extends SlidingFragmentActivity {
 				@Override
 				public boolean onNavigationItemSelected(int itemPosition, long itemId) {
 					// TODO Auto-generated method stub
-					Toast.makeText(FrameworkActivity.this, hsList.get(itemPosition).getName(), Toast.LENGTH_SHORT).show();
+					currCity = hsList.get(itemPosition).getName();
 					updateData(hsList.get(itemPosition));
 					return false;
 				}
@@ -276,9 +281,19 @@ public class FrameworkActivity extends SlidingFragmentActivity {
 		DBHotSpot hsm = new DBHotSpot();
 		hsm.setName("更多");
 		hsList.add(hsm);
-		/*if(sla != null) {
-			sla.notifyDataSetChanged();
-		}*/
+		
+		switch(pflag) {
+		case 1: {
+			((HotEventFragment)mContent).reloadData(hs.getName());
+			break;
+		}
+		case 2: {
+			break;
+		}
+		case 3: {
+			break;
+		}
+		}
 	}
 	
 	public void switchContent(Fragment fragment) {
@@ -290,34 +305,36 @@ public class FrameworkActivity extends SlidingFragmentActivity {
 		getSlidingMenu().showContent();
 	}
 	
+	
 	public void switchContent(Class<? extends Fragment> fClass, String tag, Bundle args) {
 		FragmentManager fm = getSupportFragmentManager();
-		Fragment fragment = fm.findFragmentByTag(tag);  
+		mContent = fm.findFragmentByTag(tag);  
         boolean isFragmentExist = true;  
-        if (fragment == null) {  
+        if (mContent == null) {  
             try {  
                 isFragmentExist = false;  
-                fragment = fClass.newInstance();  
-                fragment.setArguments(new Bundle());  
+                mContent = fClass.newInstance();  
+                mContent.setArguments(new Bundle());  
             } catch (java.lang.InstantiationException e) {  
                 e.printStackTrace();  
             } catch (IllegalAccessException e) {  
                 e.printStackTrace();  
             }  
         }  
-        if(fragment.isAdded()){  
+        if(mContent.isAdded()){ 
+        	getSlidingMenu().showContent();
             return;  
         }  
         if( args != null && !args.isEmpty() ) {  
-            fragment.getArguments().putAll(args);  
+        	mContent.getArguments().putAll(args);  
         }  
         FragmentTransaction ft = fm.beginTransaction();  
         /*ft.setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out,  
                 android.R.anim.fade_in, android.R.anim.fade_out);*/  
         if( isFragmentExist ) {  
-            ft.replace(R.id.act_framework_content, fragment);  
+            ft.replace(R.id.act_framework_content, mContent);  
         } else {  
-            ft.replace(R.id.act_framework_content, fragment, tag);  
+            ft.replace(R.id.act_framework_content, mContent, tag);  
         }  
           
         ft.addToBackStack(tag);  

@@ -4,7 +4,6 @@ import java.util.ArrayList;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -24,7 +23,6 @@ import com.alexan.findevents.dao.DBComment;
 import com.alexan.findevents.dao.DBCommentDao;
 import com.alexan.findevents.dao.DBEvent;
 import com.alexan.findevents.dao.DBEventCategory;
-import com.alexan.findevents.dao.DBEventImage;
 import com.alexan.findevents.dao.DBImage;
 import com.alexan.findevents.dao.DBImageDao.Properties;
 import com.alexan.findevents.util.DBHelper;
@@ -74,14 +72,14 @@ public class EventDetailActivity extends SherlockActivity {
 	
 	private void initData() {
 		vTitle.setText(currEvent.getTitle() == null ? "DEFAULT TITLE" : currEvent.getTitle());
-		if(currEvent.getId() != null && currEvent.getImages() != null && currEvent.getImages().size() > 0) {
-			DBEventImage ei = currEvent.getImages().get(0);
+		
+		if(currEvent.getId() != null) {
 			QueryBuilder<DBImage> qb = DBHelper.getInstance(this).getImageDao()
-					.queryBuilder().where(Properties.Id.eq(ei.getImageID()));
+					.queryBuilder().where(Properties.EventID.eq(currEvent.getId()));
 			if(qb.list().size() > 0) {
 				Bitmap bm = ImageUtil.decodeSampledBitmapFromPath(qb.list().get(0).getImageUrl(), DensityUtil.dip2px(this, 96f), 
 						DensityUtil.dip2px(this, 96f));
-				vImage.setBackgroundDrawable(new BitmapDrawable(this.getResources(), bm));
+				vImage.setImageBitmap(bm);
 			}
 		}
 		
@@ -180,8 +178,6 @@ public class EventDetailActivity extends SherlockActivity {
 		vDetail = (ListViewForScrollView) findViewById(R.id.act_eventdetail_list);
 		
 	}
-	
-	
 	
 	
 	@Override

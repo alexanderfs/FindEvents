@@ -5,6 +5,4 @@ public class AppConstant {
 	public static String localStorage = "";
 	public static String folderName = "/findevents";
 	
-	public static String gitTest = "asdkfjaskdf";
-	public static String gitTest2 = "asdkfjaskdf";
 }

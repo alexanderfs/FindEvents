@@ -1,6 +1,8 @@
 package com.alexan.findevents;
 
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 import android.content.Intent;
@@ -14,14 +16,18 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Spinner;
 
 import com.alexan.findevents.dao.DBEvent;
+import com.alexan.findevents.dao.DBEventDao;
 import com.alexan.findevents.R;
 import com.alexan.findevents.event.EventDetailActivity;
 import com.alexan.findevents.util.DBHelper;
+
+import de.greenrobot.dao.query.QueryBuilder;
 
 public class RealtimeFragment extends Fragment {
 	
@@ -34,6 +40,7 @@ public class RealtimeFragment extends Fragment {
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
+		currCity = getArguments().getString("curr_city");
 		View eventView = inflater.inflate(R.layout.activity_rtevent, container, false);
 		initView(eventView);
 		getActivity().setTitle("");
@@ -50,6 +57,39 @@ public class RealtimeFragment extends Fragment {
 		ArrayAdapter<CharSequence> ac2 = ArrayAdapter.createFromResource(getActivity(), R.array.time, 
 				R.layout.list_simple_item);
 		vTime.setAdapter(ac2);
+		vTime.setOnItemSelectedListener(new OnItemSelectedListener() {
+
+			@Override
+			public void onItemSelected(AdapterView<?> parent, View view,
+					int position, long id) {
+				// TODO Auto-generated method stub
+				Date dtoday = new Date();
+				Calendar c = Calendar.getInstance();
+				c.setTime(dtoday);
+				c.set(Calendar.DATE, c.get(Calendar.DATE) + 1);
+				Date dtomorrow = c.getTime();
+				switch(position) {
+				case 0: {
+					reloadData(currCity);
+					break;
+				}
+				case 1: {
+					reloadData(currCity, dtoday, dtomorrow);
+					break;
+				}
+				case 2: {
+					reloadData(currCity, dtomorrow);
+					break;
+				}
+				}
+			}
+
+			@Override
+			public void onNothingSelected(AdapterView<?> parent) {
+				// TODO Auto-generated method stub
+				
+			}
+		});
 		
 		vCategory = (Spinner) v.findViewById(R.id.act_rtevent_sp2);
 		ArrayAdapter<CharSequence> ac3 = ArrayAdapter.createFromResource(getActivity(), R.array.category, 
@@ -80,7 +120,7 @@ public class RealtimeFragment extends Fragment {
 		
 		vList = (ListView) v.findViewById(R.id.act_rtevent_list);
 		currEventList = DBHelper.getInstance(getActivity()).getEventDao().loadAll();
-		HotEventListAdapter hea = new HotEventListAdapter(getActivity(), currEventList);
+		hea = new HotEventListAdapter(getActivity(), currEventList);
 		vList.setAdapter(hea);
 		vList.setOnItemClickListener(new OnItemClickListener() {
 
@@ -95,6 +135,39 @@ public class RealtimeFragment extends Fragment {
 				startActivity(i);
 			}
 		});
+	}
+	
+	private HotEventListAdapter hea;
+	private String currCity;
+	
+	public void reloadData(String city) {
+		currCity = city;
+		QueryBuilder<DBEvent> qbEvent = DBHelper.getInstance(getActivity()).getEventDao()
+				.queryBuilder().where(DBEventDao.Properties.City.eq(city));
+		currEventList = qbEvent.list();
+		hea = new HotEventListAdapter(getActivity(), currEventList);
+		vList.setAdapter(hea);
+	}
+	
+	public void reloadData(String city, Date tomorrow) {
+		currCity = city;
+		QueryBuilder<DBEvent> qbEvent = DBHelper.getInstance(getActivity()).getEventDao()
+				.queryBuilder().where(DBEventDao.Properties.City.eq(city),
+				DBEventDao.Properties.Starttime.ge(tomorrow.getTime()));
+		currEventList = qbEvent.list();
+		hea = new HotEventListAdapter(getActivity(), currEventList);
+		vList.setAdapter(hea);
+	}
+	
+	public void reloadData(String city, Date today, Date tomorrow) {
+		currCity = city;
+		QueryBuilder<DBEvent> qbEvent = DBHelper.getInstance(getActivity()).getEventDao()
+				.queryBuilder().where(DBEventDao.Properties.City.eq(city),
+				DBEventDao.Properties.Starttime.ge(today.getTime()),
+				DBEventDao.Properties.Endtime.le(tomorrow.getTime()));
+		currEventList = qbEvent.list();
+		hea = new HotEventListAdapter(getActivity(), currEventList);
+		vList.setAdapter(hea);
 	}
 
 }

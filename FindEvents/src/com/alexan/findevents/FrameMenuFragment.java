@@ -91,22 +91,31 @@ public class FrameMenuFragment extends ListFragment {
 		
 		switch (position) {
 		case 0:
-			switchFragment(PersonalFragment.class, "personal");
+			switchFragment(PersonalFragment.class, "personal", null);
 			break;
-		case 1:
-			switchFragment(HotEventFragment.class, "hotevent");
+		case 1: {
+			Bundle b = new Bundle();
+			b.putString("curr_city", ((FrameworkActivity)getActivity()).getCurrCity());
+			switchFragment(HotEventFragment.class, "hotevent", b);
 			break;
-		case 2:
-			switchFragment(RealtimeFragment.class, "realtimeevent");
+		}
+		case 2: {
+			Bundle b = new Bundle();
+			b.putString("curr_city", ((FrameworkActivity)getActivity()).getCurrCity());
+			switchFragment(RealtimeFragment.class, "realtimeevent", b);
 			break;
-		case 3:
-			switchFragment(CategoryFragment.class, "categoryevent");
+		}
+		case 3: {
+			Bundle b = new Bundle();
+			b.putString("curr_city", ((FrameworkActivity)getActivity()).getCurrCity());
+			switchFragment(CategoryFragment.class, "categoryevent", b);
 			break;
+		}
 		case 4:
-			switchFragment(FriendCircleFragment.class, "friendcircle");
+			switchFragment(FriendCircleFragment.class, "friendcircle", null);
 			break;
 		default:
-			switchFragment(SettingsFragment.class, "settings");
+			switchFragment(SettingsFragment.class, "settings", null);
 			break;
 		}
 
@@ -120,8 +129,8 @@ public class FrameMenuFragment extends ListFragment {
 		fca.switchContent(fragment);
 	}
 	
-	private void switchFragment(Class<? extends Fragment> fClass, String tag) {
-		((FrameworkActivity)getActivity()).switchContent(fClass, tag, null);
+	private void switchFragment(Class<? extends Fragment> fClass, String tag, Bundle data) {
+		((FrameworkActivity)getActivity()).switchContent(fClass, tag, data);
 	}
 
 }

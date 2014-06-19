@@ -181,16 +181,15 @@
                         android:orientation="horizontal" >
 
                         <Button
-                            android:id="@+id/act_publishevent_starttime"
-                            android:layout_width="wrap_content"
-                            android:layout_height="48dp"
-                            android:text="开始时间" />
-
-                        <Button
                             android:id="@+id/act_publishevent_startdate"
                             android:layout_width="wrap_content"
                             android:layout_height="48dp"
                             android:text="开始日期" />
+                        <Button
+                            android:id="@+id/act_publishevent_starttime"
+                            android:layout_width="wrap_content"
+                            android:layout_height="48dp"
+                            android:text="开始时间" />
                     </LinearLayout>
 
                     <TextView
@@ -205,16 +204,15 @@
                         android:orientation="horizontal" >
 
                         <Button
-                            android:id="@+id/act_publishevent_endtime"
-                            android:layout_width="wrap_content"
-                            android:layout_height="48dp"
-                            android:text="结束时间" />
-
-                        <Button
                             android:id="@+id/act_publishevent_enddate"
                             android:layout_width="wrap_content"
                             android:layout_height="48dp"
                             android:text="结束日期" />
+                        <Button
+                            android:id="@+id/act_publishevent_endtime"
+                            android:layout_width="wrap_content"
+                            android:layout_height="48dp"
+                            android:text="结束时间" />
                     </LinearLayout>
                 </LinearLayout>
             </LinearLayout>

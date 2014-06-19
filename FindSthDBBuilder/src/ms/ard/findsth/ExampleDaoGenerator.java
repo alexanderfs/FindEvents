@@ -112,6 +112,8 @@ public class ExampleDaoGenerator {
     	image.addIntProperty("cacheLevel");
     	image.addLongProperty("referBigImageID");
     	image.addLongProperty("timestamp");
+    	image.addLongProperty("eventID");
+    	image.addLongProperty("personID");
     }
     
     private static void addEvent(Schema schema) {
@@ -141,16 +143,6 @@ public class ExampleDaoGenerator {
     	
     	ToMany eCategories = event.addToMany(eventCategory, eID);
     	eCategories.setName("categories");
-    	
-    	Entity eventImage = schema.addEntity("DBEventImage");
-    	eventImage.addIdProperty();
-    	eID = eventImage.addLongProperty("eventID").getProperty();
-    	eventImage.addToOne(eventImage, eID);
-    	eventImage.addLongProperty("imageID");
-    	eventImage.addLongProperty("timestamp");
-    	
-    	ToMany eImages = event.addToMany(eventImage, eID);
-    	eImages.setName("images");
     }
     
     private static void addComment(Schema schema) {

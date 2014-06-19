@@ -4,17 +4,16 @@ import java.util.List;
 
 import android.app.Activity;
 import android.graphics.Bitmap;
+import android.support.v4.util.LruCache;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.alexan.findevents.dao.DBCategoryDao.Properties;
 import com.alexan.findevents.dao.DBEvent;
-import com.alexan.findevents.dao.DBEventImage;
 import com.alexan.findevents.dao.DBImage;
-import com.alexan.findevents.R;
+import com.alexan.findevents.dao.DBImageDao;
 import com.alexan.findevents.util.DBHelper;
 import com.alexan.findevents.util.DensityUtil;
 import com.alexan.findevents.util.ImageUtil;
@@ -27,10 +26,25 @@ public class HotEventListAdapter extends BaseAdapter {
 	
 	private Activity mCtx;
 	private List<DBEvent> eventList;
+	private LruCache<String, Bitmap> imgList;
 	
 	public HotEventListAdapter(Activity ctx, List<DBEvent> eventList) {
 		mCtx = ctx;
 		this.eventList = eventList;
+		int maxMemory = (int) (Runtime.getRuntime().maxMemory() / 1024);  
+	    // 使用最大可用内存值的1/32作为缓存的大小。  
+	    int cacheSize = maxMemory / 32;  
+	    imgList = new LruCache<String, Bitmap>(cacheSize);  
+	}
+	
+	public void addBitmapToMemoryCache(String key, Bitmap bitmap) {  
+	    if (getBitmapFromMemCache(key) == null) {  
+	        imgList.put(key, bitmap);  
+	    }  
+	}  
+	  
+	public Bitmap getBitmapFromMemCache(String key) {  
+	    return imgList.get(key);  
 	}
 
 	@Override
@@ -68,18 +82,21 @@ public class HotEventListAdapter extends BaseAdapter {
 			vh = (ViewHolder) convertView.getTag();
 		}
 		
-		if(eventList.get(position).getId() != null && eventList.get(position).getImages() != null 
-				&& eventList.get(position).getImages().size() > 0) {
-			DBEventImage ei = eventList.get(position).getImages().get(0);
-			QueryBuilder<DBImage> qb = DBHelper.getInstance(mCtx).getImageDao()
-					.queryBuilder().where(Properties.Id.eq(ei.getImageID()));
-			if(qb.list().size() > 0) {
-				Bitmap bm = ImageUtil.decodeSampledBitmapFromPath(qb.list().get(0).getImageUrl(), DensityUtil.dip2px(mCtx, 96f), 
-						DensityUtil.dip2px(mCtx, 96f));
+		DBEvent currEvent = eventList.get(position);
+		if(currEvent.getId() != null) {
+			QueryBuilder<DBImage> qbimg = DBHelper.getInstance(mCtx).getImageDao()
+					.queryBuilder().where(DBImageDao.Properties.EventID.eq(currEvent.getId()));
+			List<DBImage> dbimgList = qbimg.list();
+			if(dbimgList.size() > 0) {
+				DBImage currImg = dbimgList.get(0);
+				Bitmap bm;
+				if((bm = getBitmapFromMemCache(currImg.getImageUrl())) == null) {
+					bm = ImageUtil.decodeSampledBitmapFromPath(currImg.getImageUrl(), DensityUtil.dip2px(mCtx, 96f), 
+							DensityUtil.dip2px(mCtx, 96f));
+					addBitmapToMemoryCache(currImg.getImageUrl(), bm);
+				}
 				vh.img.setImageBitmap(bm);
 			}
-		} else {
-			//vh.img.setImageDrawable(mCtx.getResources().getDrawable(R.drawable.u36));
 		}
 		
 		String tmp = eventList.get(position).getTitle();

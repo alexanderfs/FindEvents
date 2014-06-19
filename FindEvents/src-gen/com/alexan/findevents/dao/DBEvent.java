@@ -33,7 +33,6 @@ public class DBEvent {
     private transient DBEventDao myDao;
 
     private List<DBEventCategory> categories;
-    private List<DBEventImage> images;
 
     public DBEvent() {
     }
@@ -206,28 +205,6 @@ public class DBEvent {
     /** Resets a to-many relationship, making the next get call to query for a fresh result. */
     public synchronized void resetCategories() {
         categories = null;
-    }
-
-    /** To-many relationship, resolved on first access (and after reset). Changes to to-many relations are not persisted, make changes to the target entity. */
-    public List<DBEventImage> getImages() {
-        if (images == null) {
-            if (daoSession == null) {
-                throw new DaoException("Entity is detached from DAO context");
-            }
-            DBEventImageDao targetDao = daoSession.getDBEventImageDao();
-            List<DBEventImage> imagesNew = targetDao._queryDBEvent_Images(id);
-            synchronized (this) {
-                if(images == null) {
-                    images = imagesNew;
-                }
-            }
-        }
-        return images;
-    }
-
-    /** Resets a to-many relationship, making the next get call to query for a fresh result. */
-    public synchronized void resetImages() {
-        images = null;
     }
 
     /** Convenient call for {@link AbstractDao#delete(Object)}. Entity must attached to an entity context. */
