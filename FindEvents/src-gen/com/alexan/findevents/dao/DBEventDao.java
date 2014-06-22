@@ -38,6 +38,7 @@ public class DBEventDao extends AbstractDao<DBEvent, Long> {
         public final static Property AttendNum = new Property(12, Integer.class, "attendNum", false, "ATTEND_NUM");
         public final static Property CommentNum = new Property(13, Integer.class, "commentNum", false, "COMMENT_NUM");
         public final static Property Timestamp = new Property(14, Long.class, "timestamp", false, "TIMESTAMP");
+        public final static Property Visibility = new Property(15, Long.class, "visibility", false, "VISIBILITY");
     };
 
     private DaoSession daoSession;
@@ -70,7 +71,8 @@ public class DBEventDao extends AbstractDao<DBEvent, Long> {
                 "'COLLECTION_NUM' INTEGER," + // 11: collectionNum
                 "'ATTEND_NUM' INTEGER," + // 12: attendNum
                 "'COMMENT_NUM' INTEGER," + // 13: commentNum
-                "'TIMESTAMP' INTEGER);"); // 14: timestamp
+                "'TIMESTAMP' INTEGER," + // 14: timestamp
+                "'VISIBILITY' INTEGER);"); // 15: visibility
     }
 
     /** Drops the underlying database table. */
@@ -158,6 +160,11 @@ public class DBEventDao extends AbstractDao<DBEvent, Long> {
         if (timestamp != null) {
             stmt.bindLong(15, timestamp);
         }
+ 
+        Long visibility = entity.getVisibility();
+        if (visibility != null) {
+            stmt.bindLong(16, visibility);
+        }
     }
 
     @Override
@@ -190,7 +197,8 @@ public class DBEventDao extends AbstractDao<DBEvent, Long> {
             cursor.isNull(offset + 11) ? null : cursor.getInt(offset + 11), // collectionNum
             cursor.isNull(offset + 12) ? null : cursor.getInt(offset + 12), // attendNum
             cursor.isNull(offset + 13) ? null : cursor.getInt(offset + 13), // commentNum
-            cursor.isNull(offset + 14) ? null : cursor.getLong(offset + 14) // timestamp
+            cursor.isNull(offset + 14) ? null : cursor.getLong(offset + 14), // timestamp
+            cursor.isNull(offset + 15) ? null : cursor.getLong(offset + 15) // visibility
         );
         return entity;
     }
@@ -213,6 +221,7 @@ public class DBEventDao extends AbstractDao<DBEvent, Long> {
         entity.setAttendNum(cursor.isNull(offset + 12) ? null : cursor.getInt(offset + 12));
         entity.setCommentNum(cursor.isNull(offset + 13) ? null : cursor.getInt(offset + 13));
         entity.setTimestamp(cursor.isNull(offset + 14) ? null : cursor.getLong(offset + 14));
+        entity.setVisibility(cursor.isNull(offset + 15) ? null : cursor.getLong(offset + 15));
      }
     
     /** @inheritdoc */

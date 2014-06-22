@@ -3,46 +3,6 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical" >
-   <!--  <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="48dp"
-        android:background="#ff34a5ee" >
-
-        <Button
-            android:id="@+id/act_ca_back"
-            android:layout_width="42dp"
-            android:layout_height="42dp"
-            android:layout_alignParentLeft="true"
-            android:layout_centerVertical="true"
-            android:layout_margin="5dp"
-            android:background="@drawable/back" />
-        <Spinner
-            android:id="@+id/act_ca_choosespot"
-            android:layout_width="60dp"
-            android:layout_height="42dp"
-            android:layout_centerVertical="true"
-            android:layout_toRightOf="@id/act_ca_back"
-            android:background="#ff34a5ee" />
-
-        <TextView
-            android:id="@+id/act_ca_title"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
-            android:text="分类浏览"
-            android:textAppearance="?android:attr/textAppearanceLarge"
-            android:textColor="@android:color/white" />
-
-        <Button
-            android:id="@+id/act_ca_search"
-            android:layout_width="42dp"
-            android:layout_height="42dp"
-            android:layout_alignParentRight="true"
-            android:layout_centerVertical="true"
-            android:layout_margin="5dp"
-            android:background="@drawable/u10_search" />
-
-    </RelativeLayout> -->
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -55,7 +15,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
             android:text="类型: "
-            android:textAppearance="?android:attr/textAppearanceMedium" />
+            android:textAppearance="?android:attr/textAppearanceLarge" />
 
         <HorizontalScrollView
             android:layout_width="match_parent"
@@ -66,12 +26,20 @@
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:orientation="horizontal" >
+                <TextView
+                    android:id="@+id/act_ca_ca0"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="10dp"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:text="全部" />
 
                 <TextView
                     android:id="@+id/act_ca_ca1"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginRight="10dp"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
                     android:text="展会" />
 
                 <TextView
@@ -79,6 +47,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginRight="10dp"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
                     android:text="文娱" />
 
                 <TextView
@@ -86,6 +55,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginRight="10dp"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
                     android:text="体育" />
 
                 <TextView
@@ -93,6 +63,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginRight="10dp"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
                     android:text="商业" />
 
                 <TextView
@@ -100,6 +71,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginRight="10dp"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
                     android:text="科技" />
 
                 <TextView
@@ -107,6 +79,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginRight="10dp"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
                     android:text="亲子" />
 
                 <TextView
@@ -114,6 +87,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginRight="10dp"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
                     android:text="风俗" />
 
                 <TextView
@@ -121,6 +95,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginRight="10dp"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
                     android:text="文教" />
 
                 <TextView
@@ -128,6 +103,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginRight="10dp"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
                     android:text="医药" />
                 
                 <TextView
@@ -135,6 +111,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginRight="10dp"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
                     android:text="其他" />
             </LinearLayout>
         </HorizontalScrollView>
@@ -152,7 +129,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
             android:text="时间: "
-            android:textAppearance="?android:attr/textAppearanceMedium" />
+            android:textAppearance="?android:attr/textAppearanceLarge" />
 
         <TextView
             android:id="@+id/act_ca_ca11"
@@ -160,6 +137,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
             android:layout_marginRight="10dp"
+            android:textAppearance="?android:attr/textAppearanceMedium"
             android:text="全部 " />
 
         <TextView
@@ -168,6 +146,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
             android:layout_marginRight="10dp"
+            android:textAppearance="?android:attr/textAppearanceMedium"
             android:text="今日精彩 " />
         
         <TextView
@@ -176,14 +155,17 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
             android:layout_marginRight="10dp"
+            android:textAppearance="?android:attr/textAppearanceMedium"
             android:text="明日预告" />
         
-        <Spinner 
-            android:id="@+id/act_ca_sort"
-            android:layout_gravity="right"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"/>
+        
     </LinearLayout>
+    
+    <Spinner 
+            android:id="@+id/act_ca_sort"
+            android:layout_gravity="left"
+            android:layout_width="wrap_content"
+            android:layout_height="48dp"/>
     
     <ListView 
         android:id="@+id/act_ca_list"

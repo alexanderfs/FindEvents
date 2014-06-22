@@ -46,21 +46,27 @@ public class PickAddrActivity extends SherlockActivity {
 			View editView = getLayoutInflater().inflate(R.layout.dialog_addlocation, null);
 			final EditText vAddr = (EditText) editView.findViewById(R.id.dlg_addloc_addr);
 			final EditText vAddrDetail = (EditText) editView.findViewById(R.id.dlg_addloc_addrdetail);
+			final EditText vCity = (EditText) editView.findViewById(R.id.dlg_addloc_addrcity);
+			final EditText vDistrict = (EditText) editView.findViewById(R.id.dlg_addloc_addrdistrict);
 			AlertDialog.Builder editDialogbuilder = new AlertDialog.Builder(this);
+			editDialogbuilder.setTitle("请完整填写地址信息，否则无法保存");
 			editDialogbuilder.setView(editView);
 			editDialogbuilder.setPositiveButton("确定", new OnClickListener() {
 				
 				@Override
 				public void onClick(DialogInterface dialog, int which) {
 					// TODO Auto-generated method stub
-					if(vAddr.getText().length() == 0 ||
-							vAddrDetail.getText().length() == 0) {
-						Toast.makeText(PickAddrActivity.this, "地点不能为空", Toast.LENGTH_SHORT).show();
+					if(vAddr.getText().length() == 0 || vAddrDetail.getText().length() == 0 ||
+							vCity.getText().length() == 0 || vDistrict.getText().length() == 0) {
+						Toast.makeText(PickAddrActivity.this, "保存失败，请填写完整的地址", Toast.LENGTH_SHORT).show();
 						return;
 					}
 					DBLocation ndbl = new DBLocation();
 					ndbl.setAddrName(vAddr.getText().toString());
 					ndbl.setAddrDetail(vAddrDetail.getText().toString());
+					ndbl.setAddrCity(vCity.getText().toString());
+					ndbl.setAddrDistrict(vDistrict.getText().toString());
+					ndbl.setTimestamp(System.currentTimeMillis());
 					DBHelper.getInstance(PickAddrActivity.this).getLocationDao().insert(ndbl);
 					vList.setAdapter(new LocationAdapter());
 				}
@@ -92,8 +98,7 @@ public class PickAddrActivity extends SherlockActivity {
 				// TODO Auto-generated method stub
 				DBLocation dbl = locationList.get(position);
 				Intent i = new Intent();
-				i.putExtra("addr", dbl.getAddrName());
-				i.putExtra("addrdetail", dbl.getAddrDetail());
+				i.putExtra("location_id", dbl.getId());
 				setResult(RESULT_OK, i);
 				finish();
 			}

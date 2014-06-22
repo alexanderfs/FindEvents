@@ -3,6 +3,7 @@ package com.alexan.findevents;
 import java.io.File;
 import java.lang.ref.WeakReference;
 
+import android.R.string;
 import android.app.Activity;
 import android.content.ContentValues;
 import android.content.Intent;
@@ -19,6 +20,7 @@ import android.widget.Toast;
 
 import com.alexan.findevents.dao.DBCategoryDao;
 import com.alexan.findevents.dao.DBHotSpotDao;
+import com.alexan.findevents.dao.DBLocationDao;
 import com.alexan.findevents.util.DBCopyOpenHelper;
 import com.alexan.findevents.util.DBHelper;
 import com.alexan.findevents.util.ImageUtil;
@@ -67,11 +69,26 @@ public class LaunchActivity extends Activity {
 				cv.put("timestamp", System.currentTimeMillis());
 				sdb.insert(DBCategoryDao.TABLENAME, null, cv);
 			}
-			String[] hotspotList = getResources().getStringArray(R.array.hotspot);
-			for(String hs: hotspotList) {
+			
+			String[] locationList = getResources().getStringArray(R.array.location_name);
+			String[] loDescList = getResources().getStringArray(R.array.location_desc);
+			String[] loCityList = getResources().getStringArray(R.array.location_city);
+			String[] loDistrictList = getResources().getStringArray(R.array.location_district);
+			for(int i = 0; i < locationList.length; i++) {
 				ContentValues cv = new ContentValues();
-				cv.put("name", hs);
-				cv.put("timestamp", System.currentTimeMillis());
+				cv.put(DBLocationDao.Properties.AddrName.columnName, locationList[i]);
+				cv.put(DBLocationDao.Properties.AddrDetail.columnName, loDescList[i]);
+				cv.put(DBLocationDao.Properties.AddrCity.columnName, loCityList[i]);
+				cv.put(DBLocationDao.Properties.AddrDistrict.columnName, loDistrictList[i]);
+				cv.put(DBLocationDao.Properties.Timestamp.columnName, System.currentTimeMillis());
+				sdb.insert(DBLocationDao.TABLENAME, null, cv);
+			}
+			String[] hotList = getResources().getStringArray(R.array.hotspot);
+			int i = 0;
+			for(String hs: hotList) {
+				ContentValues cv = new ContentValues();
+				cv.put(DBHotSpotDao.Properties.Name.columnName, hs);
+				cv.put(DBHotSpotDao.Properties.Timestamp.columnName, System.currentTimeMillis() + i++);
 				sdb.insert(DBHotSpotDao.TABLENAME, null, cv);
 			}
 			sdb.setTransactionSuccessful();

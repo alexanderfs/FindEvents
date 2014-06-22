@@ -44,6 +44,7 @@ import com.alexan.findevents.dao.DBDistrict;
 import com.alexan.findevents.dao.DBEvent;
 import com.alexan.findevents.dao.DBEventCategory;
 import com.alexan.findevents.dao.DBImage;
+import com.alexan.findevents.dao.DBLocation;
 import com.alexan.findevents.dao.DBProvince;
 import com.alexan.findevents.util.DBHelper;
 import com.alexan.findevents.util.DensityUtil;
@@ -474,8 +475,10 @@ public class PublishEventActivity extends SherlockActivity {
 			Toast.makeText(this, "请选择活动地点", Toast.LENGTH_SHORT).show();
 			return;
 		}
-		currEvent.setAddress(strTmp);
-		currEvent.setAddressdetail(strTmp);
+		currEvent.setAddress(selectLo.getAddrName());
+		currEvent.setAddressdetail(selectLo.getAddrDetail());
+		currEvent.setCity(selectLo.getAddrCity());
+		currEvent.setDistrict(selectLo.getAddrDistrict());
 		
 		currEvent.setStarttime(new GregorianCalendar(year, month, dayofmonth, hour, minute).getTime().getTime());
 		currEvent.setEndtime(new GregorianCalendar(year2, month2, dayofmonth2, hour2, minute2).getTime().getTime());
@@ -553,16 +556,21 @@ public class PublishEventActivity extends SherlockActivity {
 				Toast.makeText(this, "获取照片失败", Toast.LENGTH_SHORT).show();
 			}
 		} else if(resultCode == RESULT_OK && requestCode == 2) {
-			String addrDesc = data.getStringExtra("addr");
-			if(addrDesc == null || addrDesc.length() == 0) {
-				addrDesc = "DEFAULT ADDR";
+			long id = data.getLongExtra("location_id", 0);
+			if(id == 0) {
+				vAddrName.setText("data error");
+				vAddrDetail.setText("data error");
+			} else {
+				selectLo = DBHelper.getInstance(this).getLocationDao().load(id);
+				vAddrName.setText(selectLo.getAddrName());
+				vAddrDetail.setText(selectLo.getAddrDetail());
 			}
-			vAddrName.setText(data.getStringExtra("addr"));
-			vAddrDetail.setText(data.getStringExtra("addrdetail"));
 		} else if(resultCode == RESULT_OK && requestCode == 3) {
 			getStoreEvent();
 		}
 	}
+	
+	private DBLocation selectLo;
 	
 	private String getUriPath(Uri uri) {
 		 String[] projection = {MediaStore.Images.Media.DATA};    

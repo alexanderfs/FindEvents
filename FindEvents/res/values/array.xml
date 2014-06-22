@@ -98,6 +98,7 @@
         <item>我关注的</item>
     </string-array>
     <string-array name="category">
+        <item>全部</item>
         <item>展会</item>
         <item>文娱</item>
         <item>体育</item>
@@ -151,23 +152,53 @@
         <item>明日预告</item>
     </string-array>
     <string-array name="district">
-        <item>东城区</item>
-        <item>西城区</item>
-        <item>朝阳区</item>
-        <item>丰台区</item>
-        <item>石景山区</item>
-        <item>海淀区</item>
-        <item>门头沟区</item>
-        <item>房山区</item>
-        <item>通州区</item>
-        <item>顺义区</item>
-        <item>昌平区</item>
-        <item>大兴区</item>
-        <item>怀柔区</item>
-        <item>平谷区</item>
-        <item>密云县</item>
-        <item>延庆县</item>
+        <item>全部</item>
+        <item>东城</item>
+        <item>西城</item>
+        <item>朝阳</item>
+        <item>丰台</item>
+        <item>石景山</item>
+        <item>海淀</item>
+        <item>门头沟</item>
+        <item>房山</item>
+        <item>通州</item>
+        <item>顺义</item>
+        <item>昌平</item>
+        <item>大兴</item>
+        <item>怀柔</item>
+        <item>平谷</item>
+        <item>密云</item>
+        <item>延庆</item>
         <item>开发区 </item>
+    </string-array>
+    
+    <string-array name="location_name">
+        <item>枫蓝国际</item>
+        <item>新中关</item>
+        <item>款板凳</item>
+        <item>万事屋</item>
+        <item>先锋书店</item>
+    </string-array>
+    <string-array name="location_desc">
+        <item>北京市海淀区西直门北大街13号</item>
+        <item>北京市海淀区中关村南大街4号</item>
+        <item>北京市东城区东直门内大街10号</item>
+        <item>北京市西城区歌舞伎町一街3号</item>
+        <item>南京市鼓楼区南京大学北路1号</item>
+    </string-array>
+    <string-array name="location_city">
+        <item>北京</item>
+        <item>北京</item>
+        <item>北京</item>
+        <item>北京</item>
+        <item>南京</item>
+    </string-array>
+    <string-array name="location_district">
+        <item>海淀</item>
+        <item>海淀</item>
+        <item>东城</item>
+        <item>西城</item>
+        <item>鼓楼</item>
     </string-array>
 
 </resources>

@@ -79,10 +79,11 @@
                 android:layout_gravity="center_vertical"
                 android:layout_margin="5dp"
                 android:textAppearance="?android:attr/textAppearanceMedium"/>
-            <Spinner 
+            <EditText 
                 android:id="@+id/act_eventsearch_spots"
                 android:layout_height="40dp"
-                android:layout_width="match_parent" />
+                android:layout_width="match_parent"
+                android:hint="请输入地点" />
         </LinearLayout>
         <LinearLayout 
             android:layout_width="match_parent"

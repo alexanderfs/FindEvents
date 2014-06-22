@@ -16,5 +16,17 @@
         android:layout_height="wrap_content"
         android:layout_margin="4dp"
         android:hint="在此键入详细地址"/>
+    <EditText 
+        android:id="@+id/dlg_addloc_addrcity"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="4dp"
+        android:hint="在此键入所在城市"/>
+    <EditText 
+        android:id="@+id/dlg_addloc_addrdistrict"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="4dp"
+        android:hint="在此键入所在区县"/>
 
 </LinearLayout>

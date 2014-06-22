@@ -18,16 +18,23 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ArrayAdapter;
+import android.widget.BaseAdapter;
 import android.widget.ListView;
 import android.widget.Spinner;
+import android.widget.TextView;
 
+import com.alexan.findevents.dao.DBCategory;
+import com.alexan.findevents.dao.DBCategoryDao;
+import com.alexan.findevents.dao.DBCategoryEvent;
 import com.alexan.findevents.dao.DBEvent;
+import com.alexan.findevents.dao.DBEventCategory;
 import com.alexan.findevents.dao.DBEventDao;
 import com.alexan.findevents.R;
 import com.alexan.findevents.event.EventDetailActivity;
 import com.alexan.findevents.util.DBHelper;
 
 import de.greenrobot.dao.query.QueryBuilder;
+import de.greenrobot.dao.query.WhereCondition;
 
 public class RealtimeFragment extends Fragment {
 	
@@ -36,6 +43,9 @@ public class RealtimeFragment extends Fragment {
 	private Spinner vArea;
 	private ListView vList;
 	private SwipeRefreshLayout vRefresh;
+	private int sp1;
+	private int sp2;
+	private int sp3;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -46,11 +56,51 @@ public class RealtimeFragment extends Fragment {
 		getActivity().setTitle("");
 		((FrameworkActivity)getActivity()).setPFlag(2);
 		((FrameworkActivity)getActivity()).supportInvalidateOptionsMenu();
+		categoryList = DBHelper.getInstance(getActivity()).getCategoryDao().loadAll();
+		System.out.println(categoryList);
 		return eventView;
 	}
 	
+	private Date today, tomorrow;
 	
+
 	private List<DBEvent> currEventList = new ArrayList<DBEvent>();
+	private List<DBCategory> categoryList;
+	
+	private class CategoryAdapter extends BaseAdapter {
+
+		@Override
+		public int getCount() {
+			// TODO Auto-generated method stub
+			if(categoryList == null) {
+				categoryList = new ArrayList<DBCategory>();
+			}
+			return categoryList.size();
+		}
+
+		@Override
+		public Object getItem(int position) {
+			// TODO Auto-generated method stub
+			return null;
+		}
+
+		@Override
+		public long getItemId(int position) {
+			// TODO Auto-generated method stub
+			return 0;
+		}
+
+		@Override
+		public View getView(int position, View convertView, ViewGroup parent) {
+			// TODO Auto-generated method stub
+			View v = getActivity().getLayoutInflater().inflate(R.layout.list_simple_item, null);
+			((TextView)v.findViewById(android.R.id.text1)).setText(categoryList.get(position).getName());
+			return v;
+		}
+		
+	}
+	
+	private String[] districtArray;
 
 	private void initView(View v) {
 		vTime = (Spinner) v.findViewById(R.id.act_rtevent_sp1);
@@ -63,25 +113,8 @@ public class RealtimeFragment extends Fragment {
 			public void onItemSelected(AdapterView<?> parent, View view,
 					int position, long id) {
 				// TODO Auto-generated method stub
-				Date dtoday = new Date();
-				Calendar c = Calendar.getInstance();
-				c.setTime(dtoday);
-				c.set(Calendar.DATE, c.get(Calendar.DATE) + 1);
-				Date dtomorrow = c.getTime();
-				switch(position) {
-				case 0: {
-					reloadData(currCity);
-					break;
-				}
-				case 1: {
-					reloadData(currCity, dtoday, dtomorrow);
-					break;
-				}
-				case 2: {
-					reloadData(currCity, dtomorrow);
-					break;
-				}
-				}
+				sp1 = position;
+				reloadData();
 			}
 
 			@Override
@@ -92,14 +125,46 @@ public class RealtimeFragment extends Fragment {
 		});
 		
 		vCategory = (Spinner) v.findViewById(R.id.act_rtevent_sp2);
-		ArrayAdapter<CharSequence> ac3 = ArrayAdapter.createFromResource(getActivity(), R.array.category, 
-				R.layout.list_simple_item);
-		vCategory.setAdapter(ac3);
+		CategoryAdapter ca = new CategoryAdapter();
+		vCategory.setAdapter(ca);
+		vCategory.setOnItemSelectedListener(new OnItemSelectedListener() {
+
+			@Override
+			public void onItemSelected(AdapterView<?> parent, View view,
+					int position, long id) {
+				// TODO Auto-generated method stub
+				sp2 = position;
+				reloadData();
+			}
+
+			@Override
+			public void onNothingSelected(AdapterView<?> parent) {
+				// TODO Auto-generated method stub
+				
+			}
+		});
 		
+		districtArray = getActivity().getResources().getStringArray(R.array.district);
 		vArea = (Spinner) v.findViewById(R.id.act_rtevent_sp3);
 		ArrayAdapter<CharSequence> ac4 = ArrayAdapter.createFromResource(getActivity(), R.array.district, 
 				R.layout.list_simple_item);
 		vArea.setAdapter(ac4);
+		vArea.setOnItemSelectedListener(new OnItemSelectedListener() {
+
+			@Override
+			public void onItemSelected(AdapterView<?> parent, View view,
+					int position, long id) {
+				// TODO Auto-generated method stub
+				sp3 = position;
+				reloadData();
+			}
+
+			@Override
+			public void onNothingSelected(AdapterView<?> parent) {
+				// TODO Auto-generated method stub
+				
+			}
+		});
 		
 		vRefresh = (SwipeRefreshLayout) v.findViewById(R.id.act_rtevent_refresh);
 		vRefresh.setOnRefreshListener(new OnRefreshListener() {
@@ -119,9 +184,65 @@ public class RealtimeFragment extends Fragment {
 		});
 		
 		vList = (ListView) v.findViewById(R.id.act_rtevent_list);
-		currEventList = DBHelper.getInstance(getActivity()).getEventDao().loadAll();
+		reloadData();
+		
+	}
+	
+	private HotEventListAdapter hea;
+	private String currCity;
+	
+	public void reloadData() {
+		reloadData(currCity);
+	}
+	
+	public void reloadData(String city) {
+		currCity = city;
+		today = new Date();
+		Calendar c = Calendar.getInstance();
+		c.setTime(today);
+		c.set(Calendar.DATE, c.get(Calendar.DATE) + 1);
+		tomorrow = c.getTime();
+		QueryBuilder<DBEvent> qbEvent = DBHelper.getInstance(getActivity()).getEventDao()
+				.queryBuilder().where(DBEventDao.Properties.City.eq(currCity));
+		switch(sp1) {
+		case 1: {
+			qbEvent.where(DBEventDao.Properties.Starttime.ge(today.getTime()), 
+					DBEventDao.Properties.Starttime.le(tomorrow.getTime()));
+			break;
+		}
+		case 2: {
+			qbEvent.where(DBEventDao.Properties.Starttime.ge(tomorrow.getTime()));
+			break;
+		}
+		}
+		
+		if(sp3 != 0) {
+			qbEvent.where(DBEventDao.Properties.District.eq(districtArray[sp3]));
+		}
+		if(sp2 != 0) {
+			currEventList.clear();
+			List<DBEvent> tmpList = qbEvent.list();
+			for(DBEvent e: tmpList) {
+				boolean isFound = false;
+				for(DBEventCategory ec: e.getCategories()) {
+					DBCategory ca = DBHelper.getInstance(getActivity())
+							.getCategoryDao().load(ec.getCategoryID());
+					if(ca.getName().equals(categoryList.get(sp2).getName())) {
+						isFound = true;
+						break;
+					}
+				}
+				if(isFound) {
+					currEventList.add(e);
+				}
+			}
+		} else {
+			currEventList = qbEvent.list();
+		}
+		
 		hea = new HotEventListAdapter(getActivity(), currEventList);
 		vList.setAdapter(hea);
+		
 		vList.setOnItemClickListener(new OnItemClickListener() {
 
 			@Override
@@ -137,37 +258,5 @@ public class RealtimeFragment extends Fragment {
 		});
 	}
 	
-	private HotEventListAdapter hea;
-	private String currCity;
-	
-	public void reloadData(String city) {
-		currCity = city;
-		QueryBuilder<DBEvent> qbEvent = DBHelper.getInstance(getActivity()).getEventDao()
-				.queryBuilder().where(DBEventDao.Properties.City.eq(city));
-		currEventList = qbEvent.list();
-		hea = new HotEventListAdapter(getActivity(), currEventList);
-		vList.setAdapter(hea);
-	}
-	
-	public void reloadData(String city, Date tomorrow) {
-		currCity = city;
-		QueryBuilder<DBEvent> qbEvent = DBHelper.getInstance(getActivity()).getEventDao()
-				.queryBuilder().where(DBEventDao.Properties.City.eq(city),
-				DBEventDao.Properties.Starttime.ge(tomorrow.getTime()));
-		currEventList = qbEvent.list();
-		hea = new HotEventListAdapter(getActivity(), currEventList);
-		vList.setAdapter(hea);
-	}
-	
-	public void reloadData(String city, Date today, Date tomorrow) {
-		currCity = city;
-		QueryBuilder<DBEvent> qbEvent = DBHelper.getInstance(getActivity()).getEventDao()
-				.queryBuilder().where(DBEventDao.Properties.City.eq(city),
-				DBEventDao.Properties.Starttime.ge(today.getTime()),
-				DBEventDao.Properties.Endtime.le(tomorrow.getTime()));
-		currEventList = qbEvent.list();
-		hea = new HotEventListAdapter(getActivity(), currEventList);
-		vList.setAdapter(hea);
-	}
 
 }

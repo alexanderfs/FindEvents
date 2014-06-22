@@ -25,6 +25,7 @@ public class DBEvent {
     private Integer attendNum;
     private Integer commentNum;
     private Long timestamp;
+    private Long visibility;
 
     /** Used to resolve relations */
     private transient DaoSession daoSession;
@@ -41,7 +42,7 @@ public class DBEvent {
         this.id = id;
     }
 
-    public DBEvent(Long id, Long userID, String title, String description, String address, String province, String city, String district, String addressdetail, Long starttime, Long endtime, Integer collectionNum, Integer attendNum, Integer commentNum, Long timestamp) {
+    public DBEvent(Long id, Long userID, String title, String description, String address, String province, String city, String district, String addressdetail, Long starttime, Long endtime, Integer collectionNum, Integer attendNum, Integer commentNum, Long timestamp, Long visibility) {
         this.id = id;
         this.userID = userID;
         this.title = title;
@@ -57,6 +58,7 @@ public class DBEvent {
         this.attendNum = attendNum;
         this.commentNum = commentNum;
         this.timestamp = timestamp;
+        this.visibility = visibility;
     }
 
     /** called by internal mechanisms, do not call yourself. */
@@ -183,6 +185,14 @@ public class DBEvent {
 
     public void setTimestamp(Long timestamp) {
         this.timestamp = timestamp;
+    }
+
+    public Long getVisibility() {
+        return visibility;
+    }
+
+    public void setVisibility(Long visibility) {
+        this.visibility = visibility;
     }
 
     /** To-many relationship, resolved on first access (and after reset). Changes to to-many relations are not persisted, make changes to the target entity. */

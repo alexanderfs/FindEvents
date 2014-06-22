@@ -27,6 +27,7 @@ public class CategoryCBAdapter extends BaseAdapter {
 		this.mCtx = ctx;
 		this.mcsl = csl;
 		caList = DBHelper.getInstance(mCtx).getCategoryDao().loadAll();
+		caList.remove(0);
 		if(caList == null) {
 			caList = new ArrayList<DBCategory>();
 		}

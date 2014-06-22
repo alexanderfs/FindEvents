@@ -91,6 +91,8 @@ public class HotEventFragment extends Fragment {
 		if(eventList.size() > 0) {
 			headEvent = eventList.get(0);
 			eventList.remove(0);
+		} else {
+			headEvent = new DBEvent();
 		}
 		vTitle.setText(headEvent.getTitle() == null ? "DEFAULT TITLE" : headEvent.getTitle());
 		if(headEvent.getId() != null) {

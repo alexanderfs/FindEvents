@@ -288,9 +288,11 @@ public class FrameworkActivity extends SlidingFragmentActivity {
 			break;
 		}
 		case 2: {
+			((RealtimeFragment)mContent).reloadData(hs.getName());
 			break;
 		}
 		case 3: {
+			((CategoryFragment)mContent).reloadData(hs.getName());
 			break;
 		}
 		}

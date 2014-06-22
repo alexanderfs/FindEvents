@@ -133,6 +133,7 @@ public class ExampleDaoGenerator {
     	event.addIntProperty("attendNum");
     	event.addIntProperty("commentNum");
     	event.addLongProperty("timestamp");
+    	event.addLongProperty("visibility");
     	
     	Entity eventCategory = schema.addEntity("DBEventCategory");
     	eventCategory.addIdProperty();
@@ -164,6 +165,8 @@ public class ExampleDaoGenerator {
     	location.addIdProperty();
     	location.addStringProperty("addrName");
     	location.addStringProperty("addrDetail");
+    	location.addStringProperty("addrCity");
+    	location.addStringProperty("addrDistrict");
     	location.addLongProperty("timestamp");
     	
     	
