@@ -1,5 +1,7 @@
 package com.alexan.findevents;
 
+import java.util.List;
+
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
@@ -8,16 +10,18 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.Window;
 import android.widget.Button;
-import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.alexan.findevents.R;
+import com.alexan.findevents.dao.DBPerson;
+import com.alexan.findevents.dao.DBPersonDao;
 import com.alexan.findevents.dao.DBUser;
 import com.alexan.findevents.dao.DBUserDao;
 import com.alexan.findevents.util.DBHelper;
+
+import de.greenrobot.dao.query.QueryBuilder;
 
 public class LoginActivity extends Activity {
 
@@ -98,8 +102,19 @@ public class LoginActivity extends Activity {
 		DBUserDao ud = DBHelper.getInstance(this).getUserDao();
 		ud.deleteAll();
 		ud.insert(u);
+		
+		QueryBuilder<DBPerson> qbp = DBHelper.getInstance(this).getPersonDao().queryBuilder()
+				.where(DBPersonDao.Properties.Nickname.eq(u.getNickname()));
+		long personID = 0;
+		if(qbp.count() == 0) {
+			DBPerson p = new DBPerson();
+			p.setNickname(u.getNickname());
+			personID = DBHelper.getInstance(this).getPersonDao().insert(p);
+		}
 
 		PreferenceManager.getDefaultSharedPreferences(getApplicationContext())
 				.edit().putString("curr_user", u.getNickname()).commit();
+		PreferenceManager.getDefaultSharedPreferences(getApplicationContext())
+				.edit().putLong("curr_user_id", personID).commit();
 	}
 }

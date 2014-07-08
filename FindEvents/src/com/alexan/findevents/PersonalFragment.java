@@ -15,16 +15,10 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.actionbarsherlock.view.Window;
-import com.alexan.findevents.R;
-import com.alexan.findevents.event.PublishEventActivity;
 import com.alexan.findevents.friend.ContactListActivity;
-import com.alexan.findevents.friend.FriendCircleActivity;
 import com.alexan.findevents.friend.GroupListActivity;
-import com.alexan.findevents.me.HistoryViewActivity;
 import com.alexan.findevents.me.MeMainPageActivity;
 import com.alexan.findevents.me.MyCollectionActivity;
-import com.alexan.findevents.me.MyCommentActivity;
 import com.alexan.findevents.me.MyShareActivity;
 import com.alexan.findevents.me.PublishListActivity;
 import com.alexan.findevents.me.SpotListActivity;

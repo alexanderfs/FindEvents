@@ -3,6 +3,7 @@ package com.alexan.findevents.event;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 import android.app.Activity;
 import android.view.View;
@@ -79,14 +80,14 @@ public class CommentsAdapter extends BaseAdapter {
 		}
 		//vh.icon.setImageDrawable(mCtx.getResources().getDrawable(R.drawable.u91));
 		vh.name.setText(commList.get(position).getUsername());
-		vh.time.setText(new SimpleDateFormat("yyyy-MM-DD HH:mm").format(commList.get(position).getTimestamp()));
+		vh.time.setText(new SimpleDateFormat("yyyy-MM-DD HH:mm", Locale.CHINA).format(commList.get(position).getTimestamp()));
 		vh.content.setText(commList.get(position).getComentContent());
 		vh.comment.setOnClickListener(new OnClickListener() {
 			
 			@Override
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
-				Toast.makeText(mCtx, "" + pos, Toast.LENGTH_SHORT).show();
+				//Toast.makeText(mCtx, "" + pos, Toast.LENGTH_SHORT).show();
 			}
 		});
 		vh.share.setOnClickListener(new OnClickListener() {
@@ -94,7 +95,7 @@ public class CommentsAdapter extends BaseAdapter {
 			@Override
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
-				Toast.makeText(mCtx, "2: " + pos, Toast.LENGTH_SHORT).show();	
+				//Toast.makeText(mCtx, "2: " + pos, Toast.LENGTH_SHORT).show();	
 			}
 		});
 		return convertView;

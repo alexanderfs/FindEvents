@@ -64,19 +64,6 @@ public class HotEventFragment extends Fragment {
 	}
 	
 	private void initData() {
-		/*hoteventList = DBHelper.getInstance(getActivity()).getHotEventDao().loadAll();
-		if(hoteventList != null && hoteventList.size() > 0) {
-			int i = 0;
-			for(DBHotEvent he: hoteventList) {
-				if(i == 0) {
-					headEvent = DBHelper.getInstance(getActivity()).getEventDao().loadByRowId(he.getEventID());
-				} else {
-					eventList.add(DBHelper.getInstance(getActivity()).getEventDao().loadByRowId(he.getEventID()));
-				}
-			}
-		} else {
-			eventList = new ArrayList<DBEvent>();
-		}*/
 		eventList = DBHelper.getInstance(getActivity()).getEventDao().loadAll();
 		if(eventList.size() > 0) {
 			headEvent = eventList.get(0);

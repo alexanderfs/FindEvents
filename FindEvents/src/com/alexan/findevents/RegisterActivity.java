@@ -95,6 +95,16 @@ public class RegisterActivity extends Activity {
 		ud.deleteAll();
 		ud.insert(u);
 		
+		QueryBuilder<DBPerson> qbp = DBHelper.getInstance(this).getPersonDao().queryBuilder()
+				.where(DBPersonDao.Properties.Nickname.eq(u.getNickname()));
+		if(qbp.count() == 0) {
+			DBPerson p = new DBPerson();
+			p.setNickname(u.getNickname());
+			p.setEmailAddr(u.getEmailAddr());
+			DBHelper.getInstance(this).getPersonDao().insert(p);
+		}
+
+		
 		PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).edit()
 			.putString("curr_user", u.getNickname()).commit();
 	}

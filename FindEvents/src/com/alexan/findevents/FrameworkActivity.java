@@ -228,14 +228,15 @@ public class FrameworkActivity extends SlidingFragmentActivity {
 		break;
 		case 4: {
 			final ArrayAdapter<CharSequence> aa = ArrayAdapter.createFromResource(this, 
-					R.array.friendfunc, R.layout.list_simple_item_white);
+					R.array.friendfunc, R.layout.list_simple_item_white1);
 			getSupportActionBar().setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
 			getSupportActionBar().setListNavigationCallbacks(aa, new OnNavigationListener() {
 				
 				@Override
 				public boolean onNavigationItemSelected(int itemPosition, long itemId) {
 					// TODO Auto-generated method stub
-					Toast.makeText(FrameworkActivity.this, aa.getItem(itemPosition), Toast.LENGTH_SHORT).show();
+					//Toast.makeText(FrameworkActivity.this, aa.getItem(itemPosition), Toast.LENGTH_SHORT).show();
+					updateData(itemPosition);
 					return false;
 				}
 			});
@@ -296,6 +297,10 @@ public class FrameworkActivity extends SlidingFragmentActivity {
 			break;
 		}
 		}
+	}
+	
+	private void updateData(int pos) {
+		((FriendCircleFragment)mContent).reloadData(pos);
 	}
 	
 	public void switchContent(Fragment fragment) {

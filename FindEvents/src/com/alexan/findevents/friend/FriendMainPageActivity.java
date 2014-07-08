@@ -55,7 +55,7 @@ public class FriendMainPageActivity extends SherlockActivity {
 		vImage = (ImageView) listHead.findViewById(R.id.list_fc_head_image);
 		vName = (TextView) listHead.findViewById(R.id.list_fc_head_name);
 		vMainList.addHeaderView(listHead);
-		FriendCircleAdapter fca = new FriendCircleAdapter(this);
+		FriendCircleAdapter fca = new FriendCircleAdapter(this, null);
 		vMainList.setAdapter(fca);
 		vMainList.setOnItemClickListener(new OnItemClickListener() {
 

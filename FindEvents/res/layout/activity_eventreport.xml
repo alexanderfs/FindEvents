@@ -9,7 +9,7 @@
         android:layout_height="wrap_content"
         android:layout_margin="8dp"
         android:minHeight="96dp"
-        android:text="在此输入举报内容"/>
+        android:hint="在此输入举报内容"/>
     <Button 
         android:id="@+id/act_eventreport_submit"
         android:layout_margin="8dp"

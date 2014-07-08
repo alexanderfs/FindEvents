@@ -37,18 +37,25 @@ import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.app.SherlockActivity;
 import com.actionbarsherlock.view.MenuItem;
 import com.alexan.findevents.AppConstant;
+import com.alexan.findevents.PersonalFragment;
 import com.alexan.findevents.R;
 import com.alexan.findevents.dao.DBCategory;
 import com.alexan.findevents.dao.DBCity;
+import com.alexan.findevents.dao.DBComment;
 import com.alexan.findevents.dao.DBDistrict;
 import com.alexan.findevents.dao.DBEvent;
 import com.alexan.findevents.dao.DBEventCategory;
 import com.alexan.findevents.dao.DBImage;
 import com.alexan.findevents.dao.DBLocation;
+import com.alexan.findevents.dao.DBPerson;
+import com.alexan.findevents.dao.DBPersonDao;
 import com.alexan.findevents.dao.DBProvince;
+import com.alexan.findevents.dao.DBUser;
 import com.alexan.findevents.util.DBHelper;
 import com.alexan.findevents.util.DensityUtil;
 import com.alexan.findevents.util.ImageUtil;
+
+import de.greenrobot.dao.query.QueryBuilder;
 
 public class PublishEventActivity extends SherlockActivity {
 
@@ -455,20 +462,10 @@ public class PublishEventActivity extends SherlockActivity {
 			return;
 		}
 		currEvent.setDescription(strTmp);
-		/*StringBuilder sb = new StringBuilder();
-		int i = 0;
-		for(String str : categorySet) {
-			if(i != 0) {
-				sb.append(',');
-			}
-			sb.append(str);
-			i++;
-		}*/
 		if(categorySet == null || categorySet.size() == 0) {
 			Toast.makeText(this, "请选择活动分类", Toast.LENGTH_SHORT).show();
 			return;
 		}
-		//currEvent.setCategorylist(sb.toString());
 		
 		strTmp = vAddrName.getText().toString();
 		if(strTmp == null || strTmp.equals("请选择活动地点")) {
@@ -483,6 +480,13 @@ public class PublishEventActivity extends SherlockActivity {
 		currEvent.setStarttime(new GregorianCalendar(year, month, dayofmonth, hour, minute).getTime().getTime());
 		currEvent.setEndtime(new GregorianCalendar(year2, month2, dayofmonth2, hour2, minute2).getTime().getTime());
 		
+		DBUser u= DBHelper.getInstance(this).getUserDao().loadAll().get(0);
+		QueryBuilder<DBPerson> qbp = DBHelper.getInstance(this).getPersonDao().queryBuilder()
+				.where(DBPersonDao.Properties.Nickname.eq(u.getNickname()));
+		
+		DBPerson p = qbp.list().get(0);
+		currEvent.setUserID(p.getId());
+		
 		long eventID = DBHelper.getInstance(this).getEventDao().insert(currEvent);
 		for(DBCategory ca: categorySet) {
 			DBEventCategory ec = new DBEventCategory();
@@ -496,6 +500,15 @@ public class PublishEventActivity extends SherlockActivity {
 			img.setEventID(eventID);
 			DBHelper.getInstance(this).getImageDao().insert(img);
 		}
+		
+		DBComment dc = new DBComment();
+		dc.setUserID(p.getId());
+		dc.setEventID(eventID);
+		dc.setCommentType(1);
+		dc.setComentContent(p.getNickname() + "发布了一个活动");
+		dc.setUsername(p.getNickname());
+		dc.setTimestamp(System.currentTimeMillis());
+		DBHelper.getInstance(this).getCommentDao().insert(dc);
 		
 		Toast.makeText(this, "保存成功", Toast.LENGTH_SHORT).show();
 		this.finish();

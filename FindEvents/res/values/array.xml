@@ -7,6 +7,7 @@
         <item>按关注度排序</item>
     </string-array>
     <string-array name="friendfunc">
+        <item>全部</item>
 		<item>好友发布</item>
         <item>好友分享</item>
         <item>好友评论</item>

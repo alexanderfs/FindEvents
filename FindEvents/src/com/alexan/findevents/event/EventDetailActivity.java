@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
@@ -25,6 +26,8 @@ import com.alexan.findevents.dao.DBEvent;
 import com.alexan.findevents.dao.DBEventCategory;
 import com.alexan.findevents.dao.DBImage;
 import com.alexan.findevents.dao.DBImageDao.Properties;
+import com.alexan.findevents.dao.DBPerson;
+import com.alexan.findevents.dao.DBPersonDao;
 import com.alexan.findevents.util.DBHelper;
 import com.alexan.findevents.util.DensityUtil;
 import com.alexan.findevents.util.ImageUtil;
@@ -40,6 +43,7 @@ public class EventDetailActivity extends SherlockActivity {
 	private TextView vTitle;
 	private TextView vOtherDetail;
 	private View vCollect;
+	private View vShare;
 	private View vComment;
 	private View vReport;
 	private ListViewForScrollView vDetail;
@@ -57,6 +61,7 @@ public class EventDetailActivity extends SherlockActivity {
 		setContentView(R.layout.activity_eventdetail);
 		
 		initView();
+		
 		try {
 			currEvent = DBHelper.getInstance(this).getEventDao().loadByRowId(getIntent().getExtras().getLong("event_id"));
 			if(currEvent == null) {
@@ -90,7 +95,7 @@ public class EventDetailActivity extends SherlockActivity {
 		vDesc = (TextView) findViewById(R.id.act_eventdetail_desc);
 		vDesc.setText(currEvent.getDescription());
 		
-		vCommentsList = (ListViewForScrollView) findViewById(R.id.act_eventdetail_comments);
+		/*vCommentsList = (ListViewForScrollView) findViewById(R.id.act_eventdetail_comments);
 		CommentsAdapter ca;
 		if(currEvent.getId() == null) {
 			ca = new CommentsAdapter(this, new ArrayList<DBComment>());
@@ -99,7 +104,8 @@ public class EventDetailActivity extends SherlockActivity {
 					DBHelper.getInstance(this).getCommentDao().queryBuilder().where(DBCommentDao.Properties.EventID.eq(currEvent.getId())).list());
 		}
 		
-		vCommentsList.setAdapter(ca);
+		vCommentsList.setAdapter(ca);*/
+		
 	}
 	
 	
@@ -127,14 +133,6 @@ public class EventDetailActivity extends SherlockActivity {
 		return super.onOptionsItemSelected(item);
 	}
 
-	/*private Intent getDefaultIntent() {  
-	    Intent intent = new Intent(Intent.ACTION_SEND);  
-	       intent.setType("text/plain");    
-	       intent.putExtra(Intent.EXTRA_SUBJECT, "����");     
-	       intent.putExtra(Intent.EXTRA_TEXT, "��� ");    
-	       intent.putExtra(Intent.EXTRA_TITLE, "���Ǳ���");  
-	    return intent;  
-	} */
 
 	void initView() {
 		vACBar = getSupportActionBar();
@@ -149,7 +147,35 @@ public class EventDetailActivity extends SherlockActivity {
 			@Override
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
+				DBComment dc = new DBComment();
+				dc.setEventID(currEvent.getId());
+				dc.setCommentType(2);
+				dc.setUserID(currEvent.getUserID());
+				/*QueryBuilder<DBPerson> qbp = DBHelper.getInstance(EventDetailActivity.this).getPersonDao()
+						.queryBuilder().where(DBPersonDao.Properties.UserID.eq(new Long(dc.getUserID())));
+				dc.setUsername(qbp.list().get(0).getNickname());*/
+				String username = DBHelper.getInstance(EventDetailActivity.this).getPersonDao().load(currEvent.getUserID()).getNickname();
+				dc.setUsername(username);
+				dc.setComentContent(username + "收藏了一个活动");
+				dc.setTimestamp(System.currentTimeMillis());
+				DBHelper.getInstance(EventDetailActivity.this).getCommentDao().insert(dc);
+				currEvent.setCollectionNum((currEvent.getCollectionNum() == null ? 0 : currEvent.getCollectionNum()) + 1);
+				DBHelper.getInstance(EventDetailActivity.this).getEventDao().update(currEvent);
+				vOtherDetail.setText(ImageUtil.getEventOtherDetail(currEvent, EventDetailActivity.this));
 				Toast.makeText(EventDetailActivity.this, "收藏成功", Toast.LENGTH_SHORT).show();
+			}
+		});
+		vShare = findViewById(R.id.act_eventdetail_btn2);
+		vShare.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				Intent i = new Intent();
+				i.setAction(Intent.ACTION_SEND);
+				i.putExtra(Intent.EXTRA_TEXT, currEvent.getTitle());
+				i.setType("text/plain");
+				startActivity(i);
 			}
 		});
 		vComment = findViewById(R.id.act_eventdetail_btn3);
@@ -158,7 +184,9 @@ public class EventDetailActivity extends SherlockActivity {
 			@Override
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
+				
 				Intent i = new Intent(EventDetailActivity.this, EventCommentActivity.class);
+				i.putExtra("eventID", currEvent.getId());
 				startActivityForResult(i, 0);
 			}
 		});
@@ -184,8 +212,11 @@ public class EventDetailActivity extends SherlockActivity {
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		// TODO Auto-generated method stub
 		super.onActivityResult(requestCode, resultCode, data);
+		if(requestCode == 0) {
+			currEvent = DBHelper.getInstance(this).getEventDao().load(currEvent.getId());
+			vOtherDetail.setText(ImageUtil.getEventOtherDetail(currEvent, this));
+		}
 	}
-
 
 
 
@@ -264,8 +295,12 @@ public class EventDetailActivity extends SherlockActivity {
 				if(currEvent.getId() == null) {
 					tv.setText("DEFAULT USER");
 				} else {
-					//tv.setText(DBHelper.getInstance(EventDetailActivity.this).getPersonDao().loadByRowId(currEvent.getUserID()).getNickname());
-					tv.setText("С����");
+					DBPerson p = DBHelper.getInstance(EventDetailActivity.this).getPersonDao().loadByRowId(currEvent.getUserID());
+					if(p != null) {
+						tv.setText(p.getNickname());
+					} else {
+						tv.setText("load error");
+					}
 				}
 				
 			} 
