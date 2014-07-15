@@ -31,6 +31,7 @@ public class CategoryCBAdapter extends BaseAdapter {
 		if(caList == null) {
 			caList = new ArrayList<DBCategory>();
 		}
+		//System.out.println("asdlfjasd");
 	}
 	
 	@Override
