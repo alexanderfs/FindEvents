@@ -101,6 +101,7 @@ public class PickAddrActivity extends SherlockActivity {
 				i.putExtra("location_id", dbl.getId());
 				setResult(RESULT_OK, i);
 				finish();
+				//test
 			}
 		});
 	}
